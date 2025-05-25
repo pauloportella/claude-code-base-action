@@ -3,6 +3,7 @@
  * based on the selected provider (Anthropic API, AWS Bedrock, or Google Vertex AI)
  */
 export function validateEnvironmentVariables() {
+  const useMax = process.env.CLAUDE_CODE_USE_MAX === "1";
   const useBedrock = process.env.CLAUDE_CODE_USE_BEDROCK === "1";
   const useVertex = process.env.CLAUDE_CODE_USE_VERTEX === "1";
   const anthropicApiKey = process.env.ANTHROPIC_API_KEY;
@@ -16,7 +17,7 @@ export function validateEnvironmentVariables() {
   }
 
   if (!useBedrock && !useVertex) {
-    if (!anthropicApiKey) {
+    if (!anthropicApiKey && !useMax) {
       errors.push(
         "ANTHROPIC_API_KEY is required when using direct Anthropic API.",
       );
