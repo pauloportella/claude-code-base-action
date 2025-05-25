@@ -61,10 +61,6 @@ inputs:
     required: false
     default: "false"
 
-  use_node_cache:
-    description: "Whether to use Node.js dependency caching (set to true only for Node.js projects with lock files)"
-    required: false
-    default: "false"
 
 outputs:
   conclusion:
@@ -77,12 +73,6 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: "24.x"
-        cache: ${{ inputs.use_node_cache == 'true' && 'npm' || '' }}
-
     - name: Install Bun
       uses: oven-sh/setup-bun@v2
       with:
@@ -94,14 +84,16 @@ runs:
         cd ${{ github.action_path }}
         bun install
 
-    - name: Install Claude Code
-      shell: bash
-      run: npm install -g @anthropic-ai/claude-code@
-
     - name: Run Claude Code Action
       shell: bash
       id: run_claude
       run: |
+        # Source nvm 
+        if [ -s "$HOME/.nvm/nvm.sh" ]; then
+          export NVM_DIR="$HOME/.nvm"
+          . "$NVM_DIR/nvm.sh"
+        fi
+        
         bun run ${{ github.action_path }}/src/index.ts
       env:
         # Model configuration
