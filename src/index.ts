@@ -3,11 +3,9 @@
 import * as core from "@actions/core";
 import { preparePrompt } from "./prepare-prompt";
 import { runClaude } from "./run-claude";
-import { validateEnvironmentVariables } from "./validate-env";
 
 async function run() {
   try {
-    validateEnvironmentVariables();
 
     const promptConfig = await preparePrompt({
       prompt: process.env.INPUT_PROMPT || "",

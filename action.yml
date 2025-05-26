@@ -73,27 +73,11 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - name: Install Bun
-      uses: oven-sh/setup-bun@v2
-      with:
-        bun-version: 1.2.11
-
-    - name: Install Dependencies
-      shell: bash
-      run: |
-        cd ${{ github.action_path }}
-        bun install
-
     - name: Run Claude Code Action
       shell: bash
       id: run_claude
       run: |
-        # Source nvm 
-        if [ -s "$HOME/.nvm/nvm.sh" ]; then
-          export NVM_DIR="$HOME/.nvm"
-          . "$NVM_DIR/nvm.sh"
-        fi
-        
+
         bun run ${{ github.action_path }}/src/index.ts
       env:
         # Model configuration
